@@ -10,6 +10,7 @@ interface ProfilePageProps {
 
 const ProfilePage: React.FC<ProfilePageProps> = ({ user, onUpdateUser }) => {
   const [username, setUsername] = useState(user.username);
+  const [displayName, setDisplayName] = useState(user.displayName || '');
   const [bio, setBio] = useState(user.bio || '');
   const [isSaving, setIsSaving] = useState(false);
   const [avatarPreview, setAvatarPreview] = useState(user.avatarUrl || '');
@@ -44,6 +45,7 @@ const ProfilePage: React.FC<ProfilePageProps> = ({ user, onUpdateUser }) => {
 
       await onUpdateUser({
         username,
+        displayName,
         bio,
         avatarUrl: finalAvatarUrl
       });
@@ -93,7 +95,7 @@ const ProfilePage: React.FC<ProfilePageProps> = ({ user, onUpdateUser }) => {
               onChange={handleFileChange} 
             />
 
-            <h2 className="comic-font text-2xl text-white uppercase mb-1">{user.username}</h2>
+            <h2 className="comic-font text-2xl text-white uppercase mb-1">{user.displayName || user.username}</h2>
             <div className="inline-block px-3 py-1 bg-[#fbbf24]/20 rounded-full">
               <p className="text-[10px] font-black text-[#fbbf24] uppercase tracking-widest">
                 {user.subscription?.replace(/_/g, ' ')}
@@ -122,6 +124,19 @@ const ProfilePage: React.FC<ProfilePageProps> = ({ user, onUpdateUser }) => {
         {/* Right Column: Form Fields */}
         <div className="md:col-span-2 space-y-6">
           <div className="bg-white/5 border border-white/10 rounded-[2.5rem] p-8 space-y-8">
+            <div className="space-y-4">
+              <label className="flex items-center gap-2 text-[#fbbf24] text-xs font-black uppercase tracking-widest ml-1">
+                <UserIcon size={14} /> Hero Name (Display Name)
+              </label>
+              <input 
+                type="text" 
+                value={displayName}
+                onChange={(e) => setDisplayName(e.target.value)}
+                className="w-full bg-black/40 border border-white/10 rounded-2xl px-6 py-4 text-white font-bold focus:border-[#fbbf24] focus:ring-1 focus:ring-[#fbbf24] transition-all outline-none"
+                placeholder="Enter your real name or hero name..."
+              />
+            </div>
+
             <div className="space-y-4">
               <label className="flex items-center gap-2 text-[#fbbf24] text-xs font-black uppercase tracking-widest ml-1">
                 <UserIcon size={14} /> Hero Alias (Username)

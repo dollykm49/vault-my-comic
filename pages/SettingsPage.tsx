@@ -98,22 +98,6 @@ const Settings: React.FC<SettingsProps> = ({ user, onUpdateUser }) => {
         </section>
 
         <section className="space-y-4">
-           <h3 className="text-left comic-font text-2xl text-[#dc2626] uppercase tracking-widest ml-4">Cloud Connection</h3>
-           <div className="bg-[#1a2332] border border-[#fbbf24] text-white p-10 rounded-[2.5rem] flex flex-col md:flex-row items-center justify-between gap-8 shadow-2xl">
-              <div className="flex items-center gap-6">
-                 <div className="w-20 h-20 bg-blue-600 rounded-3xl border-2 border-white/20 flex items-center justify-center shadow-2xl">
-                    <Cloud size={40} className="text-white" />
-                 </div>
-                 <div className="text-left">
-                    <h4 className="comic-font text-3xl uppercase tracking-widest leading-none mb-1">Vault Sync Active</h4>
-                    <p className="text-[10px] font-black text-blue-300 uppercase tracking-widest">Connected to Secure Node: US-EAST-1</p>
-                 </div>
-              </div>
-              <button className="bg-[#fbbf24] text-[#1a2332] h-14 px-10 rounded-xl font-black uppercase tracking-widest hover:scale-105 transition-all">CONFIGURE DATABASE</button>
-           </div>
-        </section>
-
-        <section className="space-y-4">
            <h3 className="text-left comic-font text-2xl text-[#dc2626] uppercase tracking-widest ml-4">Billing & Membership</h3>
            <SettingItem 
              icon={ShieldCheck} 
@@ -127,7 +111,6 @@ const Settings: React.FC<SettingsProps> = ({ user, onUpdateUser }) => {
              }}
            />
            <SettingItem icon={CreditCard} title="Subscription" desc={`Current Tier: ${user.subscription.replace(/_/g, ' ')}`} actionLabel="UPGRADE" onClick={() => navigate('/billing')} />
-           <SettingItem icon={Database} title="Storage Usage" desc={`${user.storageUsed || 0} / ${user.storageLimit || 10} Artifacts Shelved`} />
         </section>
 
         <div className="pt-10 flex flex-col items-center gap-4">

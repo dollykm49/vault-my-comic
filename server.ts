@@ -445,8 +445,8 @@ async function startServer() {
           },
         ],
         mode: 'payment',
-        success_url: `${frontendUrl}/marketplace?session_id={CHECKOUT_SESSION_ID}&comic_id=${comicId}&status=success`,
-        cancel_url: `${frontendUrl}/marketplace?status=cancel`,
+        success_url: `${frontendUrl}/billing?session_id={CHECKOUT_SESSION_ID}&comic_id=${comicId}&status=success`,
+        cancel_url: `${frontendUrl}/billing?status=cancel`,
         metadata: { buyerId, comicId },
         // If we have a seller account, we can use application_fee_amount or transfer_data
         ...(sellerStripeAccountId && {

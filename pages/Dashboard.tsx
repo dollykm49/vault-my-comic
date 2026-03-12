@@ -17,7 +17,7 @@ const Dashboard: React.FC<DashboardProps> = ({ user, comics }) => {
     <div className="space-y-8 animate-fadeIn">
       <header className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
-          <h1 className="text-4xl comic-font text-[#fbbf24] tracking-wider">WELCOME BACK, {user.username.toUpperCase()}!</h1>
+          <h1 className="text-4xl comic-font text-[#fbbf24] tracking-wider">WELCOME BACK, {(user.displayName || user.username).toUpperCase()}!</h1>
           <p className="text-gray-400 mt-1">Manage your vault and discover new treasures.</p>
         </div>
         <div className="flex gap-3">

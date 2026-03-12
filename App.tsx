@@ -25,6 +25,7 @@ const SettingsPage = lazy(() => import('./pages/SettingsPage'));
 const ArtLabPage = lazy(() => import('./pages/ArtLabPage'));
 const ProfilePage = lazy(() => import('./pages/ProfilePage'));
 const CommunityPage = lazy(() => import('./pages/CommunityPage'));
+const LandingPage = lazy(() => import('./pages/LandingPage'));
 const TickerTape = lazy(() => import('./components/TickerTape'));
 
 const LoadingFallback = () => (
@@ -213,9 +214,11 @@ const AppContent: React.FC = () => {
       
       if (!profile) {
         console.log("No profile found, creating default...");
+        const defaultName = email?.split('@')[0] || 'Hero';
         profile = {
           id: userId,
-          username: email?.split('@')[0] || 'Hero',
+          username: defaultName,
+          displayName: defaultName,
           role: UserRole.USER,
           subscription: SubscriptionTier.FREE,
           freeScansRemaining: 3,
@@ -405,7 +408,7 @@ const AppContent: React.FC = () => {
         <Suspense fallback={<LoadingFallback />}>
           <Routes>
             <Route path="/login" element={authSession ? <Navigate to="/" /> : <AuthPage onDemoLogin={enterDemoMode} />} />
-            <Route path="/" element={authSession ? (user ? <Dashboard user={user} comics={comics} /> : <div className="text-center py-20"><div className="w-8 h-8 border-4 border-[#fbbf24] border-t-transparent rounded-full animate-spin mx-auto mb-4" /><p>Syncing Profile...</p></div>) : <Navigate to="/login" />} />
+            <Route path="/" element={authSession ? (user ? <Dashboard user={user} comics={comics} /> : <div className="text-center py-20"><div className="w-8 h-8 border-4 border-[#fbbf24] border-t-transparent rounded-full animate-spin mx-auto mb-4" /><p>Syncing Profile...</p></div>) : <LandingPage />} />
             <Route path="/marketplace" element={authSession ? (user?.isSeller ? <Marketplace user={user} /> : <MarketplaceSignup user={user!} onUpdateUser={handleUpdateUser} />) : <Navigate to="/login" />} />
             <Route path="/collection/new" element={authSession ? <AddComicPage user={user!} onAdd={saveToCollection} /> : <Navigate to="/login" />} />
             <Route path="/grading" element={authSession ? (gradingResult ? <GradingResultPage user={user!} result={gradingResult.result} images={gradingResult.images} title={gradingResult.title} onSaveToCollection={(metadata) => saveToCollection(undefined, metadata as any)} onReset={() => setGradingResult(null)} isSaving={isSaving} isDemoMode={isDemoMode} /> : <GradingPage user={user!} onGradingComplete={handleGradingComplete} />) : <Navigate to="/login" />} />

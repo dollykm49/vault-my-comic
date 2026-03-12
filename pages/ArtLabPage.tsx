@@ -15,6 +15,27 @@ const ArtLab: React.FC<ArtLabProps> = ({ user }) => {
   const [isGenerating, setIsGenerating] = useState(false);
   const [currentArt, setCurrentArt] = useState<string | null>(null);
   const [history, setHistory] = useState<GeneratedArt[]>([]);
+  const [hasApiKey, setHasApiKey] = useState<boolean>(false);
+
+  React.useEffect(() => {
+    const checkApiKey = async () => {
+      if (window.aistudio) {
+        const selected = await window.aistudio.hasSelectedApiKey();
+        setHasApiKey(selected);
+      } else {
+        // Fallback for non-AI Studio environments
+        setHasApiKey(true);
+      }
+    };
+    checkApiKey();
+  }, []);
+
+  const handleSelectApiKey = async () => {
+    if (window.aistudio) {
+      await window.aistudio.openSelectKey();
+      setHasApiKey(true);
+    }
+  };
 
   const isElite = user.subscription === SubscriptionTier.VAULT_ELITE;
   const hasArtLabAccess = isElite || user.hasArtLab;
@@ -118,11 +139,19 @@ const ArtLab: React.FC<ArtLabProps> = ({ user }) => {
                     <option value="16:9" className="bg-[#1a2332]">Cinematic (16:9)</option>
                   </select>
                 </div>
-                <div className="flex items-end">
+                <div className="flex items-end gap-2">
+                  {!hasApiKey && window.aistudio && (
+                    <button 
+                      onClick={handleSelectApiKey}
+                      className="h-12 px-4 bg-blue-600 text-white rounded-xl font-black uppercase tracking-widest text-[10px] hover:bg-blue-700 transition-all"
+                    >
+                      Set API Key
+                    </button>
+                  )}
                   <button 
-                    className="w-full h-12 bg-[#fbbf24] text-[#1a2332] rounded-xl font-black uppercase tracking-widest flex items-center justify-center gap-2 hover:scale-105 transition-all disabled:opacity-50"
+                    className="flex-1 h-12 bg-[#fbbf24] text-[#1a2332] rounded-xl font-black uppercase tracking-widest flex items-center justify-center gap-2 hover:scale-105 transition-all disabled:opacity-50"
                     onClick={handleGenerate}
-                    disabled={isGenerating || !prompt.trim()}
+                    disabled={isGenerating || !prompt.trim() || (!hasApiKey && !!window.aistudio)}
                   >
                     {isGenerating ? <RefreshCw className="animate-spin" size={18} /> : <Wand2 size={18} />}
                     {isGenerating ? "MANIFESTING..." : "GENERATE ART"}

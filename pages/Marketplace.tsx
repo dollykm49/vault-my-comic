@@ -49,6 +49,14 @@ const Marketplace: React.FC<MarketplaceProps> = ({ user }) => {
     }
   };
 
+  const [activeTab, setActiveTab] = useState<'browse' | 'seller' | 'reviews'>('browse');
+  const [selectedSellerId, setSelectedSellerId] = useState<string | null>(null);
+
+  const viewSellerProfile = (sellerId: string) => {
+    setSelectedSellerId(sellerId);
+    setActiveTab('seller');
+  };
+
   const filtered = comics.filter(c => 
     c.title.toLowerCase().includes(search.toLowerCase()) ||
     c.publisher.toLowerCase().includes(search.toLowerCase())
@@ -72,17 +80,39 @@ const Marketplace: React.FC<MarketplaceProps> = ({ user }) => {
       <header className="flex flex-col md:flex-row justify-between items-end gap-6">
         <div className="flex-1 w-full">
           <h1 className="text-5xl comic-font text-[#fbbf24] tracking-wider mb-2">LIVE MARKETPLACE</h1>
-          <div className="relative max-w-xl">
-            <Icons.Search className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-500" />
-            <input 
-              value={search}
-              onChange={e => setSearch(e.target.value)}
-              placeholder="Search by title, issue, or publisher..."
-              className="w-full bg-white/5 border border-white/10 rounded-2xl py-4 pl-12 pr-6 outline-none focus:border-[#fbbf24] transition-all"
-            />
+          <div className="flex items-center gap-4 mb-6 border-b border-white/10">
+            <button 
+              onClick={() => setActiveTab('browse')}
+              className={`pb-2 px-4 text-xs font-black uppercase tracking-widest transition-all ${activeTab === 'browse' ? 'text-[#fbbf24] border-b-2 border-[#fbbf24]' : 'text-gray-500 hover:text-white'}`}
+            >
+              Browse
+            </button>
+            <button 
+              onClick={() => setActiveTab('seller')}
+              className={`pb-2 px-4 text-xs font-black uppercase tracking-widest transition-all ${activeTab === 'seller' ? 'text-[#fbbf24] border-b-2 border-[#fbbf24]' : 'text-gray-500 hover:text-white'}`}
+            >
+              Seller Profile
+            </button>
+            <button 
+              onClick={() => setActiveTab('reviews')}
+              className={`pb-2 px-4 text-xs font-black uppercase tracking-widest transition-all ${activeTab === 'reviews' ? 'text-[#fbbf24] border-b-2 border-[#fbbf24]' : 'text-gray-500 hover:text-white'}`}
+            >
+              Reviews
+            </button>
           </div>
+          {activeTab === 'browse' && (
+            <div className="relative max-w-xl">
+              <Icons.Search className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-500" />
+              <input 
+                value={search}
+                onChange={e => setSearch(e.target.value)}
+                placeholder="Search by title, issue, or publisher..."
+                className="w-full bg-white/5 border border-white/10 rounded-2xl py-4 pl-12 pr-6 outline-none focus:border-[#fbbf24] transition-all"
+              />
+            </div>
+          )}
         </div>
-        {!user.isSeller && (
+        {!user.isSeller && activeTab === 'browse' && (
           <button 
             onClick={() => navigate('/marketplace')}
             className="bg-[#fbbf24] text-[#1a2332] px-6 py-3 rounded-xl font-black uppercase tracking-widest hover:scale-105 transition-all whitespace-nowrap"
@@ -92,88 +122,142 @@ const Marketplace: React.FC<MarketplaceProps> = ({ user }) => {
         )}
       </header>
 
-      {filtered.length === 0 ? (
-        <div className="text-center py-32 bg-white/5 rounded-[3rem] border-2 border-dashed border-white/5">
-          <Icons.Cart className="h-20 w-20 mx-auto text-gray-700 mb-6 opacity-20" />
-          <h2 className="text-2xl comic-font text-white uppercase">No items found</h2>
-          <p className="text-gray-500 mt-2">Be the first to list a comic in the marketplace!</p>
-        </div>
-      ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
-          {filtered.map(comic => (
-            <div key={comic.id} className="group bg-white/5 border border-white/10 rounded-[2rem] overflow-hidden flex flex-col hover:border-[#fbbf24]/50 transition-all hover:-translate-y-1">
-              <div className="relative aspect-[3/4] overflow-hidden">
-                <img src={comic.coverImage} className="w-full h-full object-cover group-hover:scale-110 transition-all duration-700" referrerPolicy="no-referrer" />
-                <div className="absolute top-4 left-4 bg-[#dc2626] text-white px-3 py-1 rounded-lg text-xs font-black shadow-xl border border-[#fbbf24]">
-                  GRADE {comic.conditionRating.toFixed(1)}
-                </div>
-                {comic.isFeatured && (
-                  <div className="absolute bottom-4 left-4 bg-[#fbbf24] text-[#1a2332] px-3 py-1 rounded-lg text-[10px] font-black shadow-xl animate-pulse">
-                    FEATURED SPOT
+      {activeTab === 'browse' ? (
+        filtered.length === 0 ? (
+          <div className="text-center py-32 bg-white/5 rounded-[3rem] border-2 border-dashed border-white/5">
+            <Icons.Cart className="h-20 w-20 mx-auto text-gray-700 mb-6 opacity-20" />
+            <h2 className="text-2xl comic-font text-white uppercase">No items found</h2>
+            <p className="text-gray-500 mt-2">Be the first to list a comic in the marketplace!</p>
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+            {filtered.map(comic => (
+              <div key={comic.id} className="group bg-white/5 border border-white/10 rounded-[2rem] overflow-hidden flex flex-col hover:border-[#fbbf24]/50 transition-all hover:-translate-y-1">
+                <div className="relative aspect-[3/4] overflow-hidden">
+                  <img src={comic.coverImage} className="w-full h-full object-cover group-hover:scale-110 transition-all duration-700" referrerPolicy="no-referrer" />
+                  <div className="absolute top-4 left-4 bg-[#dc2626] text-white px-3 py-1 rounded-lg text-xs font-black shadow-xl border border-[#fbbf24]">
+                    GRADE {comic.conditionRating.toFixed(1)}
                   </div>
-                )}
-                {comic.gradingReport && (
-                  <div className="absolute top-4 right-4 bg-[#fbbf24] text-[#1a2332] p-2 rounded-lg shadow-xl" title="AI Certified">
-                    <Icons.Sparkles className="w-4 h-4" />
-                  </div>
-                )}
-              </div>
-              
-              <div className="p-6 flex-1 flex flex-col justify-between">
-                <div>
-                  <h3 className="text-xl font-black text-white uppercase tracking-tight truncate mb-1">{comic.title} #{comic.issueNumber}</h3>
-                  <p className="text-[10px] text-gray-500 font-black uppercase tracking-widest mb-4">{comic.publisher} • {comic.publishYear}</p>
-                  
-                  {/* Seller Info */}
-                  <div className="flex items-center gap-2 mb-4 p-2 bg-white/5 rounded-xl border border-white/5">
-                    <div className="w-8 h-8 rounded-full bg-gray-800 flex items-center justify-center border border-gray-700">
-                      <Icons.UserCircle className="w-5 h-5 text-gray-500" />
+                  {comic.isFeatured && (
+                    <div className="absolute bottom-4 left-4 bg-[#fbbf24] text-[#1a2332] px-3 py-1 rounded-lg text-[10px] font-black shadow-xl animate-pulse">
+                      FEATURED SPOT
                     </div>
-                    <div className="flex-1 min-w-0">
-                      <p className="text-[10px] font-black text-white uppercase truncate">
-                        {sellers[comic.ownerId]?.username || 'Collector'}
-                      </p>
-                      <div className="flex items-center gap-1">
-                        <span className="text-[8px] text-[#fbbf24] font-bold uppercase tracking-tighter">Trusted Seller</span>
-                        <Icons.Sparkles className="w-2 h-2 text-[#fbbf24]" />
+                  )}
+                  {comic.gradingReport && (
+                    <div className="absolute top-4 right-4 bg-[#fbbf24] text-[#1a2332] p-2 rounded-lg shadow-xl" title="AI Certified">
+                      <Icons.Sparkles className="w-4 h-4" />
+                    </div>
+                  )}
+                </div>
+                
+                <div className="p-6 flex-1 flex flex-col justify-between">
+                  <div>
+                    <h3 className="text-xl font-black text-white uppercase tracking-tight truncate mb-1">{comic.title} #{comic.issueNumber}</h3>
+                    <p className="text-[10px] text-gray-500 font-black uppercase tracking-widest mb-4">{comic.publisher} • {comic.publishYear}</p>
+                    
+                    {/* Seller Info */}
+                    <div 
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        viewSellerProfile(comic.ownerId);
+                      }}
+                      className="flex items-center gap-2 mb-4 p-2 bg-white/5 rounded-xl border border-white/5 hover:bg-white/10 cursor-pointer transition-all"
+                    >
+                      <div className="w-8 h-8 rounded-full bg-gray-800 flex items-center justify-center border border-gray-700">
+                        <Icons.UserCircle className="w-5 h-5 text-gray-500" />
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <p className="text-[10px] font-black text-white uppercase truncate">
+                          {sellers[comic.ownerId]?.username || 'Collector'}
+                        </p>
+                        <div className="flex items-center gap-1">
+                          <span className="text-[8px] text-[#fbbf24] font-bold uppercase tracking-tighter">Trusted Seller</span>
+                          <Icons.Sparkles className="w-2 h-2 text-[#fbbf24]" />
+                        </div>
                       </div>
                     </div>
                   </div>
-                </div>
-                
-                <div className="space-y-4">
-                  <div className="flex justify-between items-end">
-                    <div>
-                      <p className="text-[10px] text-gray-500 font-black uppercase tracking-widest">Listing Price</p>
-                      <p className="text-3xl font-black text-[#fbbf24]">${(comic.listingPrice || comic.estimatedValue).toLocaleString()}</p>
+                  
+                  <div className="space-y-4">
+                    <div className="flex justify-between items-end">
+                      <div>
+                        <p className="text-[10px] text-gray-500 font-black uppercase tracking-widest">Listing Price</p>
+                        <p className="text-3xl font-black text-[#fbbf24]">${(comic.listingPrice || comic.estimatedValue).toLocaleString()}</p>
+                      </div>
+                      <button 
+                        onClick={() => navigate(`/messages?userId=${comic.ownerId}`)}
+                        className="p-3 bg-white/5 hover:bg-white/10 rounded-xl text-gray-400 hover:text-white transition-all"
+                        title="Message Seller"
+                      >
+                        <Icons.MessageSquare className="w-5 h-5" />
+                      </button>
                     </div>
+                    
                     <button 
-                      onClick={() => navigate(`/messages?userId=${comic.ownerId}`)}
-                      className="p-3 bg-white/5 hover:bg-white/10 rounded-xl text-gray-400 hover:text-white transition-all"
-                      title="Message Seller"
+                      onClick={() => handleBuy(comic)}
+                      disabled={buyingId === comic.id}
+                      className="w-full bg-[#dc2626] hover:bg-red-700 text-white py-4 rounded-2xl font-black uppercase tracking-widest shadow-lg shadow-red-500/20 active:scale-95 transition-all flex items-center justify-center gap-2"
                     >
-                      <Icons.MessageSquare className="w-5 h-5" />
+                      {buyingId === comic.id ? (
+                        <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                      ) : (
+                        <>
+                          <Icons.Cart className="w-5 h-5" />
+                          Secure Checkout
+                        </>
+                      )}
                     </button>
                   </div>
-                  
-                  <button 
-                    onClick={() => handleBuy(comic)}
-                    disabled={buyingId === comic.id}
-                    className="w-full bg-[#dc2626] hover:bg-red-700 text-white py-4 rounded-2xl font-black uppercase tracking-widest shadow-lg shadow-red-500/20 active:scale-95 transition-all flex items-center justify-center gap-2"
-                  >
-                    {buyingId === comic.id ? (
-                      <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-                    ) : (
-                      <>
-                        <Icons.Cart className="w-5 h-5" />
-                        Secure Checkout
-                      </>
-                    )}
-                  </button>
                 </div>
               </div>
+            ))}
+          </div>
+        )
+      ) : activeTab === 'seller' ? (
+        <div className="bg-white/5 border border-white/10 rounded-[3rem] p-12 text-center">
+          <div className="w-24 h-24 bg-[#fbbf24]/20 rounded-full flex items-center justify-center mx-auto mb-6 border-2 border-[#fbbf24]">
+            <Icons.UserCircle size={48} className="text-[#fbbf24]" />
+          </div>
+          <h2 className="text-3xl comic-font text-white uppercase mb-2">
+            {selectedSellerId ? sellers[selectedSellerId]?.username : user.username}
+          </h2>
+          <p className="text-gray-500 font-black text-[10px] uppercase tracking-widest mb-8">
+            Vault Member since {selectedSellerId && sellers[selectedSellerId] ? new Date(sellers[selectedSellerId].joinedDate).getFullYear() : new Date(user.joinedDate).getFullYear()}
+          </p>
+          
+          <div className="grid grid-cols-3 gap-8 max-w-2xl mx-auto">
+            <div className="p-6 bg-white/5 rounded-2xl border border-white/5">
+              <p className="text-2xl font-black text-[#fbbf24]">
+                {selectedSellerId ? '12' : '0'}
+              </p>
+              <p className="text-[8px] font-black text-gray-500 uppercase tracking-widest">Sales</p>
             </div>
-          ))}
+            <div className="p-6 bg-white/5 rounded-2xl border border-white/5">
+              <p className="text-2xl font-black text-[#fbbf24]">5.0</p>
+              <p className="text-[8px] font-black text-gray-500 uppercase tracking-widest">Rating</p>
+            </div>
+            <div className="p-6 bg-white/5 rounded-2xl border border-white/5">
+              <p className="text-2xl font-black text-[#fbbf24]">
+                {selectedSellerId ? '8' : '0'}
+              </p>
+              <p className="text-[8px] font-black text-gray-500 uppercase tracking-widest">Reviews</p>
+            </div>
+          </div>
+
+          {selectedSellerId && (
+            <button 
+              onClick={() => setSelectedSellerId(null)}
+              className="mt-12 text-[10px] font-black text-gray-500 hover:text-white uppercase tracking-widest transition-all"
+            >
+              View My Stats
+            </button>
+          )}
+        </div>
+      ) : (
+        <div className="bg-white/5 border border-white/10 rounded-[3rem] p-20 text-center">
+          <Icons.MessageSquare className="h-16 w-16 mx-auto text-gray-700 mb-6 opacity-20" />
+          <h2 className="text-2xl comic-font text-white uppercase">No Reviews Yet</h2>
+          <p className="text-gray-500 mt-2">Complete transactions to build your reputation!</p>
         </div>
       )}
     </div>

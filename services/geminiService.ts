@@ -3,6 +3,11 @@ import { GoogleGenAI, Type } from "@google/genai";
 import { GradingResult, ComicMetadata } from "../types";
 
 const getApiKey = () => {
+  // Check for runtime injected key first (AI Studio dialog)
+  if (typeof window !== 'undefined' && (window as any).process?.env?.API_KEY) {
+    return (window as any).process.env.API_KEY;
+  }
+  // Fallback to build-time environment variables
   if (typeof process !== 'undefined' && process.env) {
     return process.env.API_KEY || process.env.GEMINI_API_KEY || '';
   }
