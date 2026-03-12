@@ -1,3 +1,11 @@
+declare global {
+  interface Window {
+    aistudio?: {
+      hasSelectedApiKey: () => Promise<boolean>;
+      openSelectKey: () => Promise<void>;
+    };
+  }
+}
 
 export enum UserRole {
   USER = 'USER',
@@ -20,6 +28,7 @@ export enum PurchaseType {
 export interface User {
   id: string;
   username: string;
+  displayName?: string;
   avatarUrl?: string;
   bio?: string;
   role: UserRole;
