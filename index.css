@@ -1,0 +1,15 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+}
+
+.comic-font {
+  font-family: 'Bangers', cursive;
+}
+
+@media print {
+  .no-print {
+    display: none !important;
+  }
+}

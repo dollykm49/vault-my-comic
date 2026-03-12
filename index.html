@@ -1,0 +1,66 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Comic Vault</title>
+    <link rel="manifest" href="/manifest.json">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://js.stripe.com">
+    <link rel="dns-prefetch" href="https://fonts.googleapis.com">
+    <link rel="dns-prefetch" href="https://js.stripe.com">
+    <meta name="theme-color" content="#fbbf24">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <link rel="apple-touch-icon" href="https://picsum.photos/seed/comicicon/192/192">
+    <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Inter:wght@400;500;600;700;900&display=swap" rel="stylesheet">
+    <script>
+      // Shim process.env for browser compatibility
+      window.process = window.process || { env: {} };
+    </script>
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .comic-font { font-family: 'Bangers', cursive; }
+        
+        @media print {
+            @page {
+                size: portrait;
+                margin: 0;
+            }
+            .no-print { display: none !important; }
+            body { 
+                background-color: white !important; 
+                color: black !important;
+                margin: 0 !important;
+                padding: 0 !important;
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+            }
+            #root, main {
+                width: 100% !important;
+                max-width: none !important;
+                margin: 0 !important;
+                padding: 0 !important;
+            }
+            .certificate-container {
+                border: 15px double #1a2332 !important;
+                margin: 1cm !important;
+                height: 27cm !important;
+                box-sizing: border-box !important;
+                display: flex !important;
+                flex-direction: column !important;
+            }
+            .bg-white { background-color: white !important; }
+            .text-black { color: black !important; }
+            .bg-gray-100 { background-color: #f3f4f6 !important; }
+        }
+    </style>
+    <link rel="stylesheet" href="/index.css">
+</head>
+<body class="bg-[#1a2332] text-white">
+    <div id="root"></div>
+<script type="module" src="/index.tsx"></script>
+</body>
+</html>

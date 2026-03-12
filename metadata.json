@@ -1,0 +1,7 @@
+{
+  "name": "Vault My Comic",
+  "description": "The ultimate comic book collector's platform. Grade your collection with AI, manage your vault, and trade in the marketplace.",
+  "requestFramePermissions": [
+    "camera"
+  ]
+}
