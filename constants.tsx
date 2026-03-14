@@ -34,8 +34,8 @@ export const SUBSCRIPTION_LIMITS = {
   [SubscriptionTier.VAULT_ELITE]: { 
     listings: Infinity, 
     fee: 5, 
-    priceMonthly: 49.99, 
-    priceYearly: 479.99, 
+    priceMonthly: 29.99, 
+    priceYearly: 287.99, 
     scansPerMonth: Infinity, 
     storageLimit: Infinity, 
     perks: ['Unlimited Grading', 'AI Autofill', 'Bulk Import/Export', 'Feature Marketplace Spots', 'Priority Support', 'Lowest Marketplace Fees', 'ArtLab Pro Included'] 
